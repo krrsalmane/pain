@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_PERSONNES 100
+
+struct Adresse {
+    char rue[100];
+    char ville[100];
+    int codePostal;
+};
+
+struct Personne {
+    char name[50];
+    int age;
+    struct Adresse adresse;
+};
+
+struct Personne personnes[MAX_PERSONNES];
+int nbPersonnes = 0;
+
+// Fonction pour ajouter une personne
+void ajouterPersonne() {
+    if (nbPersonnes >= MAX_PERSONNES) {
+        printf("Le nombre maximum de personnes est atteint.\n");
+        return;
+    }
+    printf("Nom: "); getchar(); fgets(personnes[nbPersonnes].name, 50, stdin);
+    printf("Âge: "); scanf("%d", &personnes[nbPersonnes].age);
+    printf("Rue: "); getchar(); fgets(personnes[nbPersonnes].adresse.rue, 100, stdin);
+    printf("Ville: "); fgets(personnes[nbPersonnes].adresse.ville, 100, stdin);
+    printf("Code Postal: "); scanf("%d", &personnes[nbPersonnes].adresse.codePostal);
+    nbPersonnes++;
+}
+
+// Fonction pour afficher toutes les personnes
+void afficherToutesLesPersonnes() {
+    if (nbPersonnes == 0) {
+        printf("Aucune personne enregistrée.\n");
+        return;
+    }
+    for (int i = 0; i < nbPersonnes; i++) {
+        printf("\nNom: %sÂge: %d\nRue: %sVille: %sCode Postal: %d\n", 
+               personnes[i].name, personnes[i].age, 
+               personnes[i].adresse.rue, personnes[i].adresse.ville, 
+               personnes[i].adresse.codePostal);
+    }
+}
+
+// Fonction pour mettre à jour une personne
+void mettreAJourPersonne() {
+    char nomRecherche[50];
+    printf("Nom à modifier: "); getchar(); fgets(nomRecherche, 50, stdin);
+    for (int i = 0; i < nbPersonnes; i++) {
+        if (strcmp(personnes[i].name, nomRecherche) == 0) {
+            printf("Nouveau nom: "); fgets(personnes[i].name, 50, stdin);
+            printf("Nouvel âge: "); scanf("%d", &personnes[i].age);
+            printf("Nouvelle rue: "); getchar(); fgets(personnes[i].adresse.rue, 100, stdin);
+            printf("Nouvelle ville: "); fgets(personnes[i].adresse.ville, 100, stdin);
+            printf("Nouveau code postal: "); scanf("%d", &personnes[i].adresse.codePostal);
+            printf("Personne mise à jour.\n");
+            return;
+        }
+    }
+    printf("Personne non trouvée.\n");
+}
+
+// Fonction pour supprimer une personne
+void supprimerPersonne() {
+    char nomRecherche[50];
+    printf("Nom à supprimer: "); getchar(); fgets(nomRecherche, 50, stdin);
+    for (int i = 0; i < nbPersonnes; i++) {
+        if (strcmp(personnes[i].name, nomRecherche) == 0) {
+            for (int j = i; j < nbPersonnes - 1; j++) {
+                personnes[j] = personnes[j + 1];
+            }
+            nbPersonnes--;
+            printf("Personne supprimée.\n");
+            return;
+        }
+    }
+    printf("Personne non trouvée.\n");
+}
+
+int main() {
+    int choix;
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Ajouter une personne\n");
+        printf("2. Afficher toutes les personnes\n");
+        printf("3. Mettre à jour une personne\n");
+        printf("4. Supprimer une personne\n");
+        printf("5. Quitter\n");
+        printf("Choisissez une option: ");
+        scanf("%d", &choix);
+
+        switch (choix) {
+            case 1:
+                ajouterPersonne();
+                break;
+            case 2:
+                afficherToutesLesPersonnes();
+                break;
+            case 3:
+                mettreAJourPersonne();
+                break;
+            case 4:
+                supprimerPersonne();
+                break;
+            case 5:
+                printf("Au revoir!\n");
+                return 0;
+            default:
+                printf("Option invalide.\n");
+        }
+    }
+    return 0;
+}
